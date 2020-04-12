@@ -9,9 +9,26 @@ import string
 # webpage = urllib.request.urlopen(req).read()
 # fff = json.loads(webpage)
 # print(fff)
+def bandListToDict(band):
+    """
+    Converts list which contains band info to dictionary
+    :param band:list
+    :return: dictionary
+    """
+    band_tag = BeautifulSoup(band[0],"lxml").a
+    band_url = band_tag.attrs.get("href")
+    band_name = band_tag.string
+    country = band[1]
+    genre = band[2]
+    status = BeautifulSoup(band[3],"lxml").span.string
+    return {"band_name":band_name,"band_url":band_url,"country":country,"genre":genre,"status":status}
+
+
+
 url_template = "https://www.metal-archives.com/browse/ajax-letter/l/{}/json/"
 data = []
 for i in string.ascii_uppercase:
     req = requests.get(url_template.format(i),headers={'user-agent': 'Mozilla/5.0'},params={"iDisplayStart":0,"iSortCol_0":0,"sEcho":1})
     list_of_letter = req.json()["aaData"]
+    list_of_letter = [bandListToDict(band) for band in list_of_letter]
     data = [*data,*list_of_letter]
