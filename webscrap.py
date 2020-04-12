@@ -10,6 +10,8 @@ import string
 # fff = json.loads(webpage)
 # print(fff)
 url_template = "https://www.metal-archives.com/browse/ajax-letter/l/{}/json/"
+data = []
 for i in string.ascii_uppercase:
-    req2 = requests.get(url_template.format(i),headers={'user-agent': 'Mozilla/5.0'},params={"iDisplayStart":1600,"iSortCol_0":0,"sEcho":1})
-print(req2.json())
+    req = requests.get(url_template.format(i),headers={'user-agent': 'Mozilla/5.0'},params={"iDisplayStart":0,"iSortCol_0":0,"sEcho":1})
+    list_of_letter = req.json()["aaData"]
+    data = [*data,*list_of_letter]
